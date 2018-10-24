@@ -59,7 +59,6 @@ function loadModules() {
 
 describe('ProfilerDOM', () => {
   let TextResource;
-  let cache;
   let resourcePromise;
   let onInteractionScheduledWorkCompleted;
   let onInteractionTraced;
@@ -81,11 +80,9 @@ describe('ProfilerDOM', () => {
       onWorkStopped: () => {},
     });
 
-    cache = ReactCache.createCache(() => {});
-
     resourcePromise = null;
 
-    TextResource = ReactCache.createResource(([text, ms = 0]) => {
+    TextResource = ReactCache.unstable_createResource(([text, ms = 0]) => {
       resourcePromise = new Promise(
         SchedulerTracing.unstable_wrap((resolve, reject) => {
           setTimeout(
@@ -101,7 +98,7 @@ describe('ProfilerDOM', () => {
   });
 
   const AsyncText = ({ms, text}) => {
-    TextResource.read(cache, [text, ms]);
+    TextResource.read([text, ms]);
     return text;
   };
 
